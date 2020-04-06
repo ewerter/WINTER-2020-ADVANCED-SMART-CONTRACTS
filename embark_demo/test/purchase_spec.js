@@ -61,20 +61,18 @@ contract("Purchase", function () {
 
   it("Buyer confirm received", async function(){
     // test here
+    let previousBalance = await web3.eth.getBalance(Purchase.options.address);
+    let result = await Purchase.methods.confirmReceived().send({
+      from: buyerAddress,
+      value: price
+    });
+    let currentState = await Purchase.state();
+    let currentBalance = await web3.eth.getBalance(Purchase.options.address);
+
+    assert.ok(currentState == state["INACTIVE"]);
+    assert.ok(currentBalance == (previousBalance - price));
+  })
   })
 
-  it("Seller aborts item", async function(){
-    // test here
-  })
-
-  // it("set storage value", async function () {
-  //   await SimpleStorage.methods.set(150).send({from: web3.eth.defaultAccount});
-  //   let result = await SimpleStorage.methods.get().call();
-  //   assert.strictEqual(parseInt(result, 10), 150);
-  // });
-
-  // it("should have account with balance", async function() {
-  //   let balance = await web3.eth.getBalance(accounts[0]);
-  //   assert.ok(parseInt(balance, 10) > 0);
-  // });
+  
 });
